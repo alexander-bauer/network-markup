@@ -25,6 +25,10 @@ for(i in 1:length(nm.json$network)) {
     }
 }
 
-# Create the network map
+# Create the network map object
 g <- graph(nm.graph)
-plot(g)
+# Apply the names
+V(g)$name <- nm.json$names
+V(g)$label <- V(g)$name
+
+plot(g, vertex.label.dist=1.5)
