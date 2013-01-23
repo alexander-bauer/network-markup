@@ -1,0 +1,22 @@
+{
+		"network": [
+			[ 8, 2 ],
+			[ 9, 1 ],
+			[ 1, 2 ],
+			[ 1, 6, 5 ],
+			[ 2, 7, 4 ],
+			[ 1, 4, 5 ],
+			[ 2, 5 ] 
+		],
+		"names": [
+			"Bridge Alpha",
+			"Bridge Beta",
+			"Data Center",
+			"Alice",
+			"Bob",
+			"Eve",
+			"Aaron",
+			"Pipe One",
+			"Pipe Two"
+		]
+}
