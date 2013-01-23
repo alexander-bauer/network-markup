@@ -44,7 +44,6 @@ func tokenize(src io.Reader) (tokens []*token) {
 			// Default to assuming that it's a reference
 			t.Id = tokenNODE
 		}
-		println(t.Literal, t.Id)
 		tokens = append(tokens, t)
 
 		tok = s.Scan()

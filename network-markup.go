@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"github.com/SashaCrofter/network-markup/nmparser"
 	"io/ioutil"
@@ -34,5 +35,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	nmparser.Parse(string(nmb))
+	network := nmparser.Parse(string(nmb))
+	jnet, err := json.MarshalIndent(network, "", "\t")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	println(string(jnet))
 }
