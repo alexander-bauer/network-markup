@@ -1,6 +1,8 @@
 #!/usr/bin/Rscript
+require("rjson")
+require("igraph")
 
-jsonToNM <- function(jfile, directed=TRUE) {
+graphNJSON <- function(jfile, directed=TRUE) {
   # Requires "rjson" and "igraph"
   
   nm.json <- fromJSON(file=jfile)
