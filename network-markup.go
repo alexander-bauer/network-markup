@@ -48,6 +48,6 @@ func main() {
 	if *fOut != "-" {
 		err = ioutil.WriteFile(*fOut, jnet, 0660)
 	} else {
-		fmt.Println(jnet)
+		fmt.Printf("%s\n", jnet)
 	}
 }
