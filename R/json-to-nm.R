@@ -6,20 +6,25 @@ jsonToNM <- function(jfile, directed=TRUE) {
   nm.json <- fromJSON(file=jfile)
   nm.graph <- c()
   
-  # Expand the $network row into igraph form
-  for(i in 1:length(nm.json$network)) {
-    if(length(nm.json$network[[i]] > 0)) {
-      for(j in 1:length(nm.json$network[[i]])) {
-        nm.graph <- c(nm.graph, i, nm.json$network[[i]][j])
+  # Initialize the graph with the given nodes
+  g <- graph.empty(n=length(nm.json), directed=directed)
+  # Add their names
+  V(g)$name <- names(nm.json)
+  V(g)$label <- V(g)$name
+  
+  # Now, add the edges
+  for(i in 1:length(nm.json)) {
+    # If the node has a "connected" field,
+    # then we note the connections by looking
+    # the names up.
+    if(length(nm.json[[i]]$connected > 0)) {
+      for(j in 1:length(nm.json[[i]]$connected)) {
+        # Add the entry
+        g <- g + edge(names(nm.json)[i],
+                        nm.json[[i]]$connected[j])
       }
     }
   }
-  
-  # Create the network map object
-  g <- graph(nm.graph, directed=directed)
-  # Apply the names
-  V(g)$name <- nm.json$names
-  V(g)$label <- V(g)$name
   
   plot(g, vertex.label.dist=1.5)
 }

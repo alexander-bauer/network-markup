@@ -1,22 +1,25 @@
 {
-		"network": [
-			[ 8, 2 ],
-			[ 9, 1 ],
-			[ 1, 2 ],
-			[ 1, 6, 5 ],
-			[ 2, 7, 4 ],
-			[ 1, 4, 5 ],
-			[ 2, 5 ] 
-		],
-		"names": [
-			"Bridge Alpha",
-			"Bridge Beta",
-			"Data Center",
-			"Alice",
-			"Bob",
-			"Eve",
-			"Aaron",
-			"Pipe One",
-			"Pipe Two"
-		]
+		"Bridge-Alpha": {
+			"connected": [ "Bridge-Beta", "Pipe-One" ]
+		},
+		"Bridge-Beta": {
+			"connected": [ "Bridge-Alpha", "Pipe-Two" ]
+		},
+		"Data Center": {
+			"connected": [ "Bridge-Alpha", "Bridge-Beta" ]
+		},
+		"Alice": {
+			"connected": [ "Bridge-Alpha", "Eve", "Bob" ]
+		},
+		"Bob": {
+			"connected": [ "Bridge-Beta", "Aaron", "Alice" ]
+		},
+		"Eve": {
+			"connected": [ "Bridge-Alpha", "Alice", "Bob" ]
+		},
+		"Aaron": {
+			"connected": [ "Bridge-Beta", "Bob" ]
+		},
+		"Pipe-One": [],
+		"Pipe-Two": []
 }

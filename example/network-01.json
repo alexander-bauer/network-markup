@@ -1,14 +1,12 @@
 {
-		"network": [
-			[ 2, 4 ],
-			[ 3 ],
-			[ 4 ],
-			[]
-		],
-		"names": [
-			"Alice",
-			"Bob",
-			"Eve",
-			"Steve"
-		]
+	"Alice": {
+		"connected": [ "Bob", "Steve" ]
+	},
+	"Bob": {
+		"connected": [ "Eve" ]
+	},
+	"Eve": {
+		"connected": [ "Steve" ]
+	},
+	"Steve": {}
 }
