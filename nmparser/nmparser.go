@@ -7,8 +7,10 @@ import (
 type Network map[string]*Node
 
 type Node struct {
-	Connected  []string               // All of the connected nodes
-	Attributes map[string]interface{} // Any attributes (unused)
+	Connected []string `json:"connected"` // All of
+	// the connected nodes
+	Attributes map[string]interface{} `json:"attributes"` // Any
+	// attributes (unused)
 }
 
 func Parse(nm string) (n Network) {

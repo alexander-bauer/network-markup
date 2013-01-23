@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"github.com/SashaCrofter/network-markup/nmparser"
 	"io/ioutil"
 	"log"
@@ -13,6 +14,7 @@ var (
 	l *log.Logger // Standard logger
 
 	fLog = flag.Bool("log", false, "enable logging")
+	fOut = flag.String("o", "-", "file to write to")
 )
 
 func main() {
@@ -35,11 +37,17 @@ func main() {
 		log.Fatal(err)
 	}
 
+	log.Println("Parsing network markup.")
 	network := nmparser.Parse(string(nmb))
+	log.Println("Marshalling into JSON.")
 	jnet, err := json.MarshalIndent(network, "", "\t")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	println(string(jnet))
+	if *fOut != "-" {
+		err = ioutil.WriteFile(*fOut, jnet, 0660)
+	} else {
+		fmt.Println(jnet)
+	}
 }
