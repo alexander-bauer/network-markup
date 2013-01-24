@@ -1,0 +1,7 @@
+Bridge Alpha is connected to Bridge Beta and Pipe One.
+Bridge Beta is connected to Bridge Alpha and Pipe Two.
+Data Center is connected to Bridge Alpha and Bridge Beta.
+Alice is connected to Bridge Alpha, Eve, and Bob.
+Bob is connected to Bridge Beta, Aaron, and Alice.
+Eve is connected to Bridge Alpha, Alice, and Bob.
+Aaron is connected to Bridge Beta and Bob.
