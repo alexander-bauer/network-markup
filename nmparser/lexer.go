@@ -14,7 +14,7 @@ const (
 
 var (
 	stringsNEWLINE   = []string{"\n", ";", "."}
-	stringsSEPARATOR = []string{",", "and", ", and"}
+	stringsSEPARATOR = []string{",", "and"}
 	stringsCONNTO    = []string{"is", "connected", "to"}
 )
 
@@ -29,20 +29,38 @@ func tokenize(src io.Reader) (tokens []*token) {
 	s.Init(src)
 	s.Mode = scanner.ScanIdents | scanner.ScanStrings
 
+	// To support spaces in labels
+	var terminated = true
+
 	// Loop through to tokenize
 	tok := s.Scan()
 	for tok != scanner.EOF {
 		// Create a token, that we'll use
 		t := &token{Literal: s.TokenText()}
 		if matches(t.Literal, stringsNEWLINE) {
+			terminated = true
 			t.Id = tokenNEWLINE
 		} else if matches(t.Literal, stringsSEPARATOR) {
+			terminated = true
 			t.Id = tokenSEPARATOR
 		} else if matches(t.Literal, stringsCONNTO) {
+			terminated = true
 			t.Id = tokenCONNTO
 		} else {
 			// Default to assuming that it's a reference
-			t.Id = tokenNODE
+			if !terminated {
+				// If it turns out that we're appending to the
+				// previous token, then we just append to its label,
+				// but then we have to make sure that we don't add
+				// another token afterward. Several hours of headache
+				// were spent discovering this.
+				tokens[len(tokens)-1].Literal += " " + t.Literal
+				tok = s.Scan()
+				continue
+			} else {
+				t.Id = tokenNODE
+			}
+			terminated = false
 		}
 		tokens = append(tokens, t)
 

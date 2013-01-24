@@ -26,7 +26,6 @@ func Parse(nm string) (n Network) {
 		// If we've hit a newline or other separator, though, we need
 		// to mark ourselves as at the beginning of the sentence.
 		if t.Id == tokenNEWLINE {
-
 			subject = nil
 			continue
 		}
@@ -36,11 +35,17 @@ func Parse(nm string) (n Network) {
 		if subject == nil {
 			if t.Id == tokenNODE {
 				// Add the new node and its identifier in the Network
-				subject = &Node{
-					Connected:  make([]string, 0),
-					Attributes: make(map[string]interface{}),
+				var node *Node
+				if _, isPresent := n[t.Literal]; !isPresent {
+					node = &Node{
+						Connected:  make([]string, 0),
+						Attributes: make(map[string]interface{}),
+					}
+					n[t.Literal] = node
+				} else {
+					node = n[t.Literal]
 				}
-				n[t.Literal] = subject
+				subject = node
 			}
 			// If the token is anything else, we can discard it for
 			// the time being.
