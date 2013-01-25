@@ -2,6 +2,7 @@
 import igraph
 import json
 import sys
+import attributes
 
 if(len(sys.argv) == 1):
     print('You need to supply a JSON file.')
@@ -16,12 +17,13 @@ g = igraph.Graph(0, directed=True)
 # Add all of the vertices, so that there are no unknown objects. They
 # are named according to their name in the JSON
 i = 0
-for name in j:
+for name, node in j.items():
+    
     print "Adding vertex: " + name
     g.add_vertex(name)
 
     # Now, g.vs[i] refers to the most recent vertex
-    g.vs[i]["label"] = name
+    attributes.apply(g.vs[i], name, node)
     i += 1
     
 
