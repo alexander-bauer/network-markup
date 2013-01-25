@@ -1,0 +1,7 @@
+Alice is connected to Bob, Steve, and Aaron.
+Bob is connected to Alice, Data Center One, and Alice.
+Steve is connected to Alice, Bob, and Data Center One.
+Aaron is connected to Data Center One.
+Joey is disabled and connected to Alice and Aaron.
+Jimmy is not disabled, and connected to Bob and Steve.
+Data Center One is high bandwidth.

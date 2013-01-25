@@ -1,0 +1,52 @@
+{
+	"Aaron": {
+		"connected": [
+			"Data Center One"
+		]
+	},
+	"Alice": {
+		"connected": [
+			"Bob",
+			"Steve",
+			"Aaron"
+		]
+	},
+	"Bob": {
+		"connected": [
+			"Alice",
+			"Data Center One",
+			"Alice"
+		]
+	},
+	"Data Center One": {
+		"connected": [],
+		"attributes": {
+			"high bandwidth": true
+		}
+	},
+	"Jimmy": {
+		"connected": [
+			"Bob",
+			"Steve"
+		],
+		"attributes": {
+			"disabled": false
+		}
+	},
+	"Joey": {
+		"connected": [
+			"Alice",
+			"Aaron"
+		],
+		"attributes": {
+			"disabled": true
+		}
+	},
+	"Steve": {
+		"connected": [
+			"Alice",
+			"Bob",
+			"Data Center One"
+		]
+	}
+}
