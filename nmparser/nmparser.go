@@ -20,9 +20,6 @@ func Parse(nm string) (n Network) {
 
 	var subject *Node
 	for _, t := range tokens {
-		// BUG(DuoNoxSol): This means of identifying nodes
-		// will break when confronted with spaces.
-
 		// If we've hit a newline or other separator, though, we need
 		// to mark ourselves as at the beginning of the sentence.
 		if t.Id == tokenNEWLINE {
