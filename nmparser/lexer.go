@@ -8,14 +8,18 @@ import (
 const (
 	tokenNEWLINE   = iota // Newline, semicolon, or other delimeter
 	tokenSEPARATOR        // Comma, or "and" or ", and"
-	tokenCONNTO           // "is connected to"
-	tokenNODE             // Node reference such as "Alice"
+	tokenIS               // "is"
+	tokenCONNTO           // "connected to"
+	tokenNEGATOR          // "not"
+	tokenIDENT            // Identifiers; "disabled" or "Alice"
 )
 
 var (
 	stringsNEWLINE   = []string{"\n", ";", "."}
 	stringsSEPARATOR = []string{",", "and"}
-	stringsCONNTO    = []string{"is", "connected", "to"}
+	stringsIS        = []string{"is"}
+	stringsNEGATOR   = []string{"not"}
+	stringsCONNTO    = []string{"connected", "to"}
 )
 
 type token struct {
@@ -43,9 +47,15 @@ func tokenize(src io.Reader) (tokens []*token) {
 		} else if matches(t.Literal, stringsSEPARATOR) {
 			terminated = true
 			t.Id = tokenSEPARATOR
+		} else if matches(t.Literal, stringsIS) {
+			terminated = true
+			t.Id = tokenIS
 		} else if matches(t.Literal, stringsCONNTO) {
 			terminated = true
 			t.Id = tokenCONNTO
+		} else if matches(t.Literal, stringsNEGATOR) {
+			terminated = true
+			t.Id = tokenNEGATOR
 		} else {
 			// Default to assuming that it's a reference
 			if !terminated {
@@ -58,7 +68,7 @@ func tokenize(src io.Reader) (tokens []*token) {
 				tok = s.Scan()
 				continue
 			} else {
-				t.Id = tokenNODE
+				t.Id = tokenIDENT
 			}
 			terminated = false
 		}

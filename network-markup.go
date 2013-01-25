@@ -38,7 +38,10 @@ func main() {
 	}
 
 	log.Println("Parsing network markup.")
-	network := nmparser.Parse(string(nmb))
+	network, err := nmparser.Parse(string(nmb))
+	if err != nil {
+		log.Println(err)
+	}
 	log.Println("Marshalling into JSON.")
 	jnet, err := json.MarshalIndent(network, "", "\t")
 	if err != nil {
