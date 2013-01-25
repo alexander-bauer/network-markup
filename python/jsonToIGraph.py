@@ -4,6 +4,11 @@ import json
 import sys
 import attributes
 
+# Constants
+bbox = (600, 600)
+directedness = True
+background = "white"
+
 if(len(sys.argv) == 1):
     print('You need to supply a JSON file.')
     exit(1)
@@ -12,7 +17,7 @@ if(len(sys.argv) == 1):
 j = json.load(open(sys.argv[1], 'r'))
 
 # Initialize the graph with n = nodes in the input file
-g = igraph.Graph(0, directed=True)
+g = igraph.Graph(0, directed=directedness)
 
 # Add all of the vertices, so that there are no unknown objects. They
 # are named according to their name in the JSON
@@ -39,7 +44,10 @@ for name, node in j.items():
     except Exception:
         pass
 
+# Make sure all edges are straight
+g.es["curved"] = 0
+# Adjust the bounding box, to avoid cutting labels.
+g.layout().fit_into(bbox=bbox)
+
 # Finally, plot the graph
-fig = igraph.Plot(bbox=(480, 480), background="white")
-fig.add(g, layout="fr")
-fig.show()
+igraph.plot(g, bbox=bbox, background=background)
