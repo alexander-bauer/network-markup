@@ -58,7 +58,7 @@ g.es["curved"] = False
 # Finally, plot the graph
 if len(output) > 0:
     print "Writing to " + output
-    igraph.plot(g, output, bbox=bbox, background=background, margin=20)
+    igraph.plot(g, output, bbox=bbox, background=background, margin=50)
 else:
     print "Displaying plot"
-    igraph.plot(g, bbox=bbox, background=background, margin=20)
+    igraph.plot(g, bbox=bbox, background=background, margin=50)
