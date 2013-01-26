@@ -9,9 +9,17 @@ bbox = (600, 600)
 directedness = True
 background = "white"
 
+# Variables that need to be declared
+output = ""
+
 if(len(sys.argv) == 1):
     print('You need to supply a JSON file.')
     exit(1)
+
+if len(sys.argv) > 2:
+    # If a second argument is supplied, interpret it as an output
+    # file.
+    output = sys.argv[2]
 
 # Get the contents of the relevant file
 j = json.load(open(sys.argv[1], 'r'))
@@ -45,9 +53,12 @@ for name, node in j.items():
         pass
 
 # Make sure all edges are straight
-g.es["curved"] = 0
-# Adjust the bounding box, to avoid cutting labels.
-g.layout().fit_into(bbox=bbox)
+g.es["curved"] = False
 
 # Finally, plot the graph
-igraph.plot(g, bbox=bbox, background=background)
+if len(output) > 0:
+    print "Writing to " + output
+    igraph.plot(g, output, bbox=bbox, background=background, margin=20)
+else:
+    print "Displaying plot"
+    igraph.plot(g, bbox=bbox, background=background, margin=20)
