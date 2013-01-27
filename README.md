@@ -73,33 +73,34 @@ details, but they should remain mostly the same.
 
 ## Technical Details
 
+Please see the [spec][] for details.
+
 Even the JSON format is relatively trivial, though. This was the output
 of the markup parser ([nmparser][]), with indentation enabled.
 
-```json
-{
-	"Alice": {
-		"connected": [
-			"Bob",
-			"Steve"
-		]
-	},
-	"Bob": {
-		"connected": [
-			"Eve"
-		]
-	},
-	"Eve": {
-		"connected": [
-			"Steve",
-			"Alice"
-		]
-	},
-	"Steve": {
-		"connected": []
+
+	{
+		"Alice": {
+			"connected": [
+				"Bob",
+				"Steve"
+			]
+		},
+		"Bob": {
+			"connected": [
+				"Eve"
+			]
+		},
+		"Eve": {
+			"connected": [
+				"Steve",
+				"Alice"
+			]
+		},
+		"Steve": {
+			"connected": []
+		}
 	}
-}
-```
 
 This is an open format which can be created by any program, automated or
 not. The markup parser itself, in the implementation in this repository,
@@ -113,22 +114,17 @@ and also simply an implementation. The library which is used,
 latter of which I am using.
 
 
-[network demo]: http://i.imgur.com/e5hoiqC.png
-	"Simple network demo"
+[network demo]: http://i.imgur.com/e5hoiqC.png "Simple network demo"
 
-[nmparser]: http://godoc.org/github.com/SashaCrofter/network-markup/nmparser
-	"Network Markup Parser Go Library"
+[nmparser]: http://godoc.org/github.com/SashaCrofter/network-markup/nmparser "Network Markup Parser Go Library"
 
-[python script]: python/jsonToIGraph.py
-[examples]: example/
+[spec]: https://github.com/SashaCrofter/network-markup/tree/development/SPEC.md
+[python script]: https://github.com/SashaCrofter/network-markup/tree/developmentpython/jsonToIGraph.py
+[examples]: https://github.com/SashaCrofter/network-markup/tree/development/example/
 
-[meshnet]: https://maryland.projectmeshnet.org
-	"Maryland Mesh Homepage"
+[meshnet]: https://maryland.projectmeshnet.org "Maryland Mesh Homepage"
 
-[igraph]: http://igraph.sourceforge.net
-	"igraph Homepage"
-[igraph install]: http://igraph.wikidot.com/installing-python-igraph-on-linux
-	"igraph Installation"
+[igraph]: http://igraph.sourceforge.net "igraph Homepage"
+[igraph install]: http://igraph.wikidot.com/installing-python-igraph-on-linux "igraph Installation"
 
-[golang]: http://golang.org
-	"Golang Homepage"
+[golang]: http://golang.org "Golang Homepage"
