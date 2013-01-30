@@ -5,14 +5,13 @@ import sys
 import attributes
 
 # Constants
-bbox = (600, 600)
 directedness = True
 background = "white"
 
 # Variables that need to be declared
 output = ""
 
-if(len(sys.argv) == 1):
+if len(sys.argv) == 1:
     print('You need to supply a JSON file.')
     exit(1)
 
@@ -58,11 +57,11 @@ g.es["curved"] = False
 # Finally, plot the graph
 if len(output) > 0:
     print "Writing to " + output
-    igraph.plot(g, output, bbox=bbox,
+    igraph.plot(g, output,
                 vertex_shape="rectangle",
                 background=background, margin=50)
 else:
     print "Displaying plot"
-    igraph.plot(g, bbox=bbox,
+    igraph.plot(g,
                 vertex_shape="rectangle",
                 background=background, margin=50)
