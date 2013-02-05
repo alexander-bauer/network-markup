@@ -36,7 +36,7 @@ func main() {
 
 	if len(*fOutfile) > 0 {
 		var err error
-		output, err = os.OpenFile(*fOutfile, os.O_WRONLY|os.O_CREATE, 0644)
+		output, err = os.OpenFile(*fOutfile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 		if err != nil {
 			l.Fatalln(err)
 		}
