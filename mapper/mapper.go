@@ -22,7 +22,8 @@ var (
 
 // Flags
 var (
-	fLog = flag.Bool("l", false, "Enable logging output")
+	fLog     = flag.Bool("l", false, "Enable logging output")
+	fOutfile = flag.String("o", "", "Write to a file")
 )
 
 func main() {
@@ -31,6 +32,15 @@ func main() {
 		l = log.New(os.Stdout, "", log.Ltime)
 	} else {
 		l = log.New(ioutil.Discard, "", 0)
+	}
+
+	if len(*fOutfile) > 0 {
+		var err error
+		output, err = os.OpenFile(*fOutfile, os.O_WRONLY|os.O_CREATE, 0644)
+		if err != nil {
+			l.Fatalln(err)
+		}
+		defer output.Close()
 	}
 
 	// Use the arguments as an array of blacklisted nodes, for
