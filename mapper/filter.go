@@ -9,30 +9,30 @@ import (
 // Filter iterates through every route in the given table, and
 // discards any Routes that are more than maxHops (discounted if <1)
 // away from the origin, or that pass through any of the IP addresses
-// as identified by doNotGoThrough. Any domain names that are intended
-// to be used should be preresolved. It returns the remaining routes.
-func Filter(table []*Route, maxHops int, doNotGoThrough []string) (filtered []*Route) {
+// as identified by endpoint. Any domain names that are intended to be
+// used should be preresolved. It returns the remaining routes.
+func Filter(table []*Route, maxHops int, endpoint []string) (filtered []*Route) {
 	useHops := maxHops > 0
 
-	if !useHops && len(doNotGoThrough) == 0 {
+	if !useHops && len(endpoint) == 0 {
 		// If we can avoid filtering altogether, by all means do.
 		l.Println("No filters applied")
 		return table
 	}
 	// Otherwise, report the arguments.
 	l.Println("Filtering by hops:", useHops)
-	l.Println("Number of bad IPs:", len(doNotGoThrough))
+	l.Println("Number of end IPs:", len(endpoint))
 
 	// Call it bad practice, but it's convenient, here.
 	containsBadHop := func(hops []*Route) bool {
-		if len(doNotGoThrough) < 1 {
+		if len(endpoint) < 1 {
 			return false
 		}
-		// For every given hop,
-		for _, route := range hops {
-			// check every string in doNotGoThrough.
-			for _, badHop := range doNotGoThrough {
-				if route.IP == badHop {
+		// For every given hop, except for the last one
+		for _, route := range hops[:len(hops)-1] {
+			// check every string in endpoint.
+			for _, endHop := range endpoint {
+				if route.IP == endHop {
 					// Only return true if at least one hop is
 					// considered bad.
 					l.Println("Discarding route that passes through",
