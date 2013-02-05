@@ -74,21 +74,29 @@ func ToNetwork(routes []*Route) (network nmparser.Network) {
 
 		// Get all of the hops in that route
 		hops := getNodesOnPath(routes, route.Path)
-		if len(hops) > 0 {
-			// Then, if there were any, (this should always be true,
-			// but let's avoid runtime errors), append its IP to the
-			// Connected attribute of the current Node.
-			lastHop := hops[len(hops)-1].IP
-			if route.IP != lastHop {
-				l.Println("Node", route.IP, "connected to", lastHop)
-				node.Connected = append(node.Connected, lastHop)
+		// Because of self-routing bugs, it's necessary to look
+		// through the list of hops.
+		i := len(hops) - 1
+		for {
+			if i >= 0 {
+				// Then, if there were any, (this should always be
+				// true, but let's avoid runtime errors), append its
+				// IP to the Connected attribute of the current Node.
+				lastHop := hops[i].IP
+				if route.IP != lastHop {
+					l.Println("Node", route.IP, "connected to", lastHop)
+					node.Connected = append(node.Connected, lastHop)
+					break
+				} else {
+					l.Println("Got self-connection on", route.IP)
+				}
+				i--
 			} else {
-				l.Println("Got self-connection on", route.IP)
+				// If we get a zero-length path, report it, but don't
+				// do anything.
+				l.Println("Got broken path for", route.IP)
+				break
 			}
-		} else {
-			// If we get a zero-length path, report it, but don't do
-			// anything.
-			l.Println("Got zero-hop path for", route.IP)
 		}
 		network[route.IP] = node
 	}
