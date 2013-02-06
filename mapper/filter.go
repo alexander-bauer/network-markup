@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/SashaCrofter/cjdngo"
 	. "github.com/SashaCrofter/cjdngo/admin"
 	"github.com/SashaCrofter/network-markup/nmparser"
 	"math"
@@ -57,8 +58,13 @@ func Filter(table []*Route, maxHops int, endpoint []string) (filtered []*Route) 
 	return
 }
 
+// ToNetwork converts from a routing table to nmparser.Network form,
+// establishing connections and determining routes. It invokes
+// truncate() on the routing table in order to shorten the IPs.
 func ToNetwork(routes []*Route) (network nmparser.Network) {
 	network = make(nmparser.Network)
+	truncate(routes)
+
 	// For every route in the given table, then use FilterRoutes() to
 	// get all of the hops on that route. Use the final hop in that
 	// result as a peer. Then, filter duplicates.
@@ -128,4 +134,26 @@ func getNodesOnPath(table []*Route, target uint64) (hops []*Route) {
 		}
 	}
 	return
+}
+
+// Convert all IPv6 addresses in a table into their shortest usable
+// form. This just serves as a wrapper for cjdngo.Truncate().
+func truncate(table []*Route) {
+	ipMap := make(map[string]interface{})
+	for _, route := range table {
+		ipMap[route.IP] = nil
+	}
+
+	// Convert the map into an array.
+	ips := make([]string, len(ipMap))
+	var i int
+	for ip := range ipMap {
+		ips[i] = ip
+		i++
+	}
+
+	t := cjdngo.Truncate(ips)
+	for _, route := range table {
+		route.IP = t[route.IP]
+	}
 }
