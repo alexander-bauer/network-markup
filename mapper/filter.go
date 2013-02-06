@@ -25,16 +25,16 @@ func Filter(table []*Route, maxHops int, endpoint []string) (filtered []*Route) 
 
 	// Call it bad practice, but it's convenient, here.
 	containsBadHop := func(hops []*Route) bool {
-		if len(endpoint) < 1 {
+		if len(endpoint) < 1 || len(hops) < 1 {
 			return false
 		}
-		// For every given hop, except for the last one
-		for _, route := range hops[:len(hops)-1] {
+		// For every given hop
+		for _, route := range hops {
 			// check every string in endpoint.
 			for _, endHop := range endpoint {
 				if route.IP == endHop {
 					// Only return true if at least one hop is
-					// considered bad.
+					// considered an end.
 					l.Println("Discarding route that passes through",
 						route.IP)
 					return true
@@ -100,20 +100,20 @@ func ToNetwork(routes []*Route) (network nmparser.Network) {
 		}
 		network[route.IP] = node
 	}
-	/*
-		// Now, we have to filter out duplicate connections.
-		for _, node := range network {
-			// Copy all Connected entries into a map[string]interface{},
-			// then copy them back.
-			connectedMap := make(map[string]interface{})
-			for _, connection := range node.Connected {
-				connectedMap[connection] = nil
-			}
-			node.Connected = make([]string, 0, len(connectedMap))
-			for k := range connectedMap {
-				node.Connected = append(node.Connected, k)
-			}
-		}*/
+
+	// Now, we have to filter out duplicate connections.
+	for _, node := range network {
+		// Copy all Connected entries into a map[string]interface{},
+		// then copy them back.
+		connectedMap := make(map[string]interface{})
+		for _, connection := range node.Connected {
+			connectedMap[connection] = nil
+		}
+		node.Connected = make([]string, 0, len(connectedMap))
+		for k := range connectedMap {
+			node.Connected = append(node.Connected, k)
+		}
+	}
 	return
 }
 
