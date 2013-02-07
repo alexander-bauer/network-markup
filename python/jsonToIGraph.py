@@ -5,7 +5,7 @@ import sys
 import attributes
 
 # Constants
-directedness = True
+directedness = False
 background = "white"
 
 # Variables that need to be declared
