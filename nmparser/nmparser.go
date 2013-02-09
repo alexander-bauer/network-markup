@@ -3,17 +3,9 @@ package nmparser
 import (
 	"errors"
 	"fmt"
+	"github.com/SashaCrofter/network"
 	"strings"
 )
-
-type Network map[string]*Node
-
-type Node struct {
-	Connected []string `json:"connected"` // All of
-	// the connected nodes
-	Attributes map[string]interface{} `json:"attributes,omitempty"` // Any
-	// attributes (unused)
-}
 
 var (
 	MultipleSubjectError = errors.New(`Multiple nodes were declared in
@@ -27,14 +19,16 @@ const (
 	partConnections        // Post-"is connected to"
 )
 
-func Parse(nm string) (n Network, err error) {
+func Parse(nm string) (n *network.Network, err error) {
 	tokens := tokenize(strings.NewReader(nm))
 
-	n = make(Network)
+	n = &network.Network{
+		Nodes: make(map[string]*network.Node),
+	}
 
-	var subject *Node // Node declared in this sentence
-	var part int      // Current part of the sentence
-	var negated bool  // Whether the part of speech is negated
+	var subject *network.Node // Node declared in this sentence
+	var part int              // Current part of the sentence
+	var negated bool          // Whether the part of speech is negated
 	for _, t := range tokens {
 		// If we've hit a newline or other separator, though, we need
 		// to mark ourselves as at the beginning of the sentence.
@@ -70,17 +64,17 @@ func Parse(nm string) (n Network, err error) {
 
 			// We must declare node to avoid an additional map
 			// lookup.
-			var node *Node
-			if _, isPresent := n[t.Literal]; !isPresent {
+			var node *network.Node
+			if _, isPresent := n.Nodes[t.Literal]; !isPresent {
 				// If the node hasn't already been declared, create it
 				// here. Otherwise, don't.
-				node = &Node{
-					Connected:  make([]string, 0),
+				node = &network.Node{
+					Connected:  make([]*network.Connection, 0),
 					Attributes: make(map[string]interface{}),
 				}
-				n[t.Literal] = node
+				n.Nodes[t.Literal] = node
 			} else {
-				node = n[t.Literal]
+				node = n.Nodes[t.Literal]
 			}
 			// Set subject to our pointer, for easy access.
 			subject = node
@@ -100,13 +94,15 @@ func Parse(nm string) (n Network, err error) {
 			// new nodes to the most recent Node's "connected" block.
 			// Additionally, we will need to recognize any attributes.
 			if t.Id == tokenIDENT {
-				subject.Connected = append(
-					subject.Connected, t.Literal)
+				subject.Connected = append(subject.Connected,
+					&network.Connection{
+						Target: t.Literal,
+					})
 				// Now that it's been connected, we need to make note
 				// of the node if it doesn't already exist.
-				if _, isPresent := n[t.Literal]; !isPresent {
-					n[t.Literal] = &Node{
-						Connected:  make([]string, 0),
+				if _, isPresent := n.Nodes[t.Literal]; !isPresent {
+					n.Nodes[t.Literal] = &network.Node{
+						Connected:  make([]*network.Connection, 0),
 						Attributes: make(map[string]interface{}),
 					}
 				}
