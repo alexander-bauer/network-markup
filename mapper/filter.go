@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/SashaCrofter/cjdngo"
 	. "github.com/SashaCrofter/cjdngo/admin"
-	"github.com/SashaCrofter/network-markup/nmparser"
+	"github.com/SashaCrofter/network"
 	"math"
 )
 
@@ -58,22 +58,24 @@ func Filter(table []*Route, maxHops int, endpoint []string) (filtered []*Route) 
 	return
 }
 
-// ToNetwork converts from a routing table to nmparser.Network form,
+// ToNetwork converts from a routing table to Network form,
 // establishing connections and determining routes. It invokes
 // truncate() on the routing table in order to shorten the IPs.
-func ToNetwork(routes []*Route) (network nmparser.Network) {
-	network = make(nmparser.Network)
+func ToNetwork(routes []*Route) (n *network.Network) {
+	n = &network.Network{
+		Nodes: make(map[string]*network.Node),
+	}
 	truncate(routes)
 
 	// For every route in the given table, then use FilterRoutes() to
 	// get all of the hops on that route. Use the final hop in that
 	// result as a peer. Then, filter duplicates.
 	for _, route := range routes {
-		node, isPresent := network[route.IP]
+		node, isPresent := n.Nodes[route.IP]
 		if !isPresent {
 			// If the node isn't already present, make it.
-			node = &nmparser.Node{
-				Connected:  make([]string, 0),
+			node = &network.Node{
+				Connected:  make([]*network.Connection, 0),
 				Attributes: make(map[string]interface{}),
 			}
 		}
@@ -91,7 +93,10 @@ func ToNetwork(routes []*Route) (network nmparser.Network) {
 				lastHop := hops[i].IP
 				if route.IP != lastHop {
 					l.Println("Node", route.IP, "connected to", lastHop)
-					node.Connected = append(node.Connected, lastHop)
+					node.Connected = append(node.Connected,
+						&network.Connection{
+							Target: lastHop,
+						})
 					break
 				} else {
 					l.Println("Got self-connection on", route.IP)
@@ -104,20 +109,23 @@ func ToNetwork(routes []*Route) (network nmparser.Network) {
 				break
 			}
 		}
-		network[route.IP] = node
+		n.Nodes[route.IP] = node
 	}
 
 	// Now, we have to filter out duplicate connections.
-	for _, node := range network {
+	for _, node := range n.Nodes {
 		// Copy all Connected entries into a map[string]interface{},
 		// then copy them back.
 		connectedMap := make(map[string]interface{})
 		for _, connection := range node.Connected {
-			connectedMap[connection] = nil
+			connectedMap[connection.Target] = nil
 		}
-		node.Connected = make([]string, 0, len(connectedMap))
+		node.Connected = make([]*network.Connection, 0, len(connectedMap))
 		for k := range connectedMap {
-			node.Connected = append(node.Connected, k)
+			node.Connected = append(node.Connected,
+				&network.Connection{
+					Target: k,
+				})
 		}
 	}
 	return

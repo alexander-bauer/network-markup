@@ -5,7 +5,6 @@ import (
 	"flag"
 	"github.com/SashaCrofter/cjdngo"
 	"github.com/SashaCrofter/cjdngo/admin"
-	//	"github.com/SashaCrofter/network-markup/nmparser"
 	"io/ioutil"
 	"log"
 	"os"
