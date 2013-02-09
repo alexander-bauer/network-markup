@@ -29,7 +29,7 @@ g = igraph.Graph(0, directed=directedness)
 # Add all of the vertices, so that there are no unknown objects. They
 # are named according to their name in the JSON
 i = 0
-for name, node in j.items():
+for name, node in j["Nodes"].items():
     
     print "Adding vertex: " + name
     g.add_vertex(name)
@@ -41,13 +41,13 @@ for name, node in j.items():
 
 # Add the edges by iterating through the "connected" field of the
 # Node, and adding an edge in the graph for each
-for name, node in j.items():
+for name, node in j["Nodes"].items():
     # This needs to be wrapped in a try/except block, because it will
     # fail if node["connected"] doesn't exist
     try:
-        for target in node["connected"]:
-            print "Adding edge: " + name + "--" + target
-            g.add_edge(name, target)
+        for connection in node["connected"]:
+            print "Adding edge: " + name + "--" + connection["Target"]
+            g.add_edge(name, connection["Target"])
     except Exception:
         pass
 
