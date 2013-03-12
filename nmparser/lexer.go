@@ -12,6 +12,7 @@ const (
 	tokenCONNTO           // "connected to"
 	tokenNEGATOR          // "not"
 	tokenIDENT            // Identifiers; "disabled" or "Alice"
+	tokenMOD              // "by", or "with"
 )
 
 var (
@@ -20,6 +21,7 @@ var (
 	stringsIS        = []string{"is"}
 	stringsNEGATOR   = []string{"not"}
 	stringsCONNTO    = []string{"connected", "to"}
+	stringsMOD       = []string{"by", "with"}
 )
 
 type token struct {
@@ -53,6 +55,9 @@ func tokenize(src io.Reader) (tokens []*token) {
 		} else if matches(t.Literal, stringsCONNTO) {
 			terminated = true
 			t.Id = tokenCONNTO
+		} else if matches(t.Literal, stringsMOD) {
+			terminated = true
+			t.Id = tokenMOD
 		} else if matches(t.Literal, stringsNEGATOR) {
 			terminated = true
 			t.Id = tokenNEGATOR
