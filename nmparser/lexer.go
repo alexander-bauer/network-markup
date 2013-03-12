@@ -15,7 +15,7 @@ const (
 	tokenMOD              // "by", or "with"
 )
 
-var (
+var (o
 	stringsNEWLINE   = []string{"\n", ";", "."}
 	stringsSEPARATOR = []string{",", "and"}
 	stringsIS        = []string{"is"}
